@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>jquery轮播效果图 </title>
+    <script type="text/javascript" src="jquery-3.5.1.js"></script>
+    <style type="text/css">
+        * {
+            padding: 0px;
+            margin: 0px;
+        }
+        
+        a {
+            text-decoration: none;
+            color: white;
+        }
+        
+        ul {
+            list-style: outside none none;
+        }
+        
+        .slider,
+        .slider-panel img,
+        .slider-extra {
+            width: 650px;
+            height: 413px;
+        }
+        
+        .slider {
+            text-align: center;
+            margin: 30px auto;
+            position: relative;
+        }
+        
+        .slider-panel,
+        .slider-nav {
+            position: absolute;
+            z-index: 8;
+        }
+        
+        .slider-panel {
+            position: absolute;
+        }
+        
+        .slider-panel img {
+            border: none;
+        }
+        
+        .slider-extra {
+            position: relative;
+        }
+        
+        .slider-nav {
+            margin-left: -300px;
+            position: absolute;
+            left: 50%;
+            bottom: 4px;
+        }
+        
+        .slider-nav li {
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            cursor: pointer;
+            margin: 0 2px;
+            overflow: hidden;
+            text-align: center;
+            display: inline-block;
+            height: 10px;
+            line-height: 10px;
+            width: 10px;
+        }
+        
+        .slider-nav .slider-item-selected {
+            background: white;
+        }
+        
+        .right {
+            width: 30px;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.2);
+            border-top-left-radius: 20px;
+            border-bottom-left-radius: 20px;
+            position: absolute;
+            left: 620px;
+            top: 50%;
+            z-index: 8;
+            font-size: 25px;
+            font-weight: bolds;
+        }
+        
+        .left {
+            width: 30px;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.2);
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
+            position: absolute;
+            left: 0px;
+            top: 50%;
+            z-index: 8;
+            font-size: 25px;
+            font-weight: bolds;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="slider">
+        <ul class="slider-main">
+            <li class="slider-panel">
+                <a href="#" target="_blank"><img src="images/1.jpg"></a>
+            </li>
+            <li class="slider-panel">
+                <a href="#" target="_blank"><img src="images/2.jpg"></a>
+            </li>
+            <li class="slider-panel">
+                <a href="#" target="_blank"><img src="images/3.jpg"></a>
+            </li>
+            <li class="slider-panel">
+                <a href="#" target="_blank"><img src="images/4.jpg"></a>
+            </li>
+            <li class="slider-panel">
+                <a href="#" target="_blank"><img src="images/5.jpg"></a>
+            </li>
+            <li class="slider-panel">
+                <a href="#" target="_blank"><img src="images/6.jpg"></a>
+            </li>
+            <li class="slider-panel">
+                <a href="#" target="_blank"><img src="images/7.jpg"></a>
+            </li>
+            <li class="slider-panel">
+                <a href="#" target="_blank"><img src="images/8.jpg"></a>
+            </li>
+        </ul>
+        <div class="slider-extra">
+            <ul class="slider-nav">
+                <li class="slider-item"></li>
+                <li class="slider-item"></li>
+                <li class="slider-item"></li>
+                <li class="slider-item"></li>
+                <li class="slider-item"></li>
+                <li class="slider-item"></li>
+                <li class="slider-item"></li>
+                <li class="slider-item"></li>
+            </ul>
+            <div class="slider-page">
+            </div>
+            <a class="left" href="javascript:;;">
+                <</a>
+        </div>
+        <div class="right"><a href="javascript:;;">></a></div>
+    </div>
+    </div>
+    </div>
+</body>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var length,
+            currentIndex = 0,
+            interval,
+            hasStarted = false,
+            t = 3000;
+        length = $('.slider-panel').length;
+        $('.slider-panel:not(:first)').hide();
+        $('.slider-item:first').addClass('slider-item-selected');
+        $('.slider-page').hide();
+        $('.slider-panel, .left, .right').hover(function() {
+            stop();
+            $('.slider-page').show();
+        }, function() {
+            $('.slider-page').hide();
+            start();
+        });
+        $('.slider-item').hover(function(e) {
+            stop();
+            var preIndex = $(".slider-item").filter(".slider-item-selected").index();
+            currentIndex = $(this).index();
+            play(preIndex, currentIndex);
+        }, function() {
+            start();
+        });
+        $('.left').unbind('click');
+        $('.left').bind('click', function() {
+            pre();
+        });
+        $('.right').unbind('click');
+        $('.right').bind('click', function() {
+            next();
+        });
+
+        function pre() {
+            var preIndex = currentIndex;
+            currentIndex = (--currentIndex + length) % length;
+            play(preIndex, currentIndex);
+        }
+
+        function next() {
+            var preIndex = currentIndex;
+            currentIndex = ++currentIndex % length;
+            play(preIndex, currentIndex);
+        }
+
+        function play(preIndex, currentIndex) {
+            $('.slider-panel').eq(preIndex).fadeOut(500)
+                .parent().children().eq(currentIndex).fadeIn(1000);
+            $('.slider-item').removeClass('slider-item-selected');
+            $('.slider-item').eq(currentIndex).addClass('slider-item-selected');
+        }
+
+        function start() {
+            if (!hasStarted) {
+                hasStarted = true;
+                interval = setInterval(next, t);
+            }
+        }
+
+        function stop() {
+            clearInterval(interval);
+            hasStarted = false;
+        }
+        start();
+    });
+</script>
+
+</html>
